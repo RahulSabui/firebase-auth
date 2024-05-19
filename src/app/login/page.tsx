@@ -60,7 +60,7 @@ export default function Home() {
     }
   };
 
-  const setCookies = (user) => {
+  const setCookies = (user:any) => {
     // Example: Set a cookie named "user" with user's ID
     Cookies.set('token', user?.email, { expires: 1 });
   };
