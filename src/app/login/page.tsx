@@ -28,7 +28,7 @@ export default function Home() {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setCookies(userCredential.user);
+      setCookies(auth?.currentUser);
       router.replace("/TwoFA");
     } catch (error: any) {
       setError(error.message);
