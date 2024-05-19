@@ -1,15 +1,16 @@
-import React from 'react'
-import AuthContext from '../AuthContext'
+import React, { ReactNode } from 'react';
+import AuthContext from '../AuthContext';
 
-const page = ({children}) => {
-  return (
-    <AuthContext>
-        {children}
-
-        </AuthContext>
-      
-
-  )
+interface PageProps {
+  children: ReactNode;
 }
 
-export default page
+const Page: React.FC<PageProps> = ({ children }) => {
+  return (
+    <AuthContext>
+      {children}
+    </AuthContext>
+  );
+}
+
+export default Page;
