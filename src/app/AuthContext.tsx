@@ -1,12 +1,12 @@
 'use client';
 import React, { useEffect, useState, createContext, useContext, ReactNode } from 'react';
 import { auth } from '@/utils/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
 // Create a context for authentication
 interface AuthContextType {
-  currentUser: any;
+  currentUser: User | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,14 +24,14 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setCurrentUser(user);
-        const token = await user.getIdToken();
+        await user.getIdToken(); // It's unclear what you do with the token, so it's left here.
       } else {
         setCurrentUser(null);
         router.replace('/login');
