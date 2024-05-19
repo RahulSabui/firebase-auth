@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, ChangeEvent, KeyboardEvent } from "react";
-import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
+import { User, onAuthStateChanged } from "firebase/auth";
 import {
   generateOTPSecret,
   generateQRCodeURL,
@@ -17,7 +17,6 @@ const TwoFA: React.FC = () => {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [fireStoredata, setFireStoredata] =  useState<string>("");
-  const auth1 = auth;
   const [qrCode, setQRCode] = useState<string>("");
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [verificationMessage, setVerificationMessage] = useState<string>("");
@@ -26,7 +25,7 @@ const TwoFA: React.FC = () => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth1, (user: User | null) => {
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       if (user) {
         setCurrentUser(user);
         console.log(user);
@@ -37,7 +36,7 @@ const TwoFA: React.FC = () => {
     });
 
     return () => unsubscribe();
-  }, [auth1]);
+  }, []);
 
   const handleGenerateQRCode = async () => {
     const newSecret = generateOTPSecret();
@@ -45,7 +44,9 @@ const TwoFA: React.FC = () => {
     const user = currentUser?.email || "";
     const otpauth = generateQRCodeURL(newSecret, user);
     const qrCodeDataURL = await generateQRCode(otpauth);
-    setQRCode(qrCodeDataURL);
+    if (qrCodeDataURL) {
+        setQRCode(qrCodeDataURL);
+      } 
 
     try {
       const q = query(collection(db, "users"), where("email", "==", currentUser?.email));
