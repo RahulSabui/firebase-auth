@@ -116,6 +116,7 @@ const TwoFA: React.FC = () => {
       inputRefs.current[index - 1]?.focus();
     }
   };
+console.log(fireStoredata, "fireStoredata");
 
   return (
     <main className="flex min-h-screen items-center justify-center p-6 bg-gray-100">
@@ -126,7 +127,8 @@ const TwoFA: React.FC = () => {
         <p className="text-center text-gray-600 mb-4">
           Please open the Authenticator app and enter the code.
         </p>
-        {fireStoredata && (
+
+        {!fireStoredata && (
           <button
             onClick={handleGenerateQRCode}
             className="w-full px-4 py-2 mb-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300"
