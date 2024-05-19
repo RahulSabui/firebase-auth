@@ -1,7 +1,6 @@
-"use client";
-import React, { useState, useEffect, useRef } from "react";
+'use client';
+import React, { useState, useEffect, useRef, ChangeEvent, KeyboardEvent } from "react";
 import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
-
 import {
   generateOTPSecret,
   generateQRCodeURL,
@@ -14,7 +13,7 @@ import { db } from "@/utils/firestore";
 import { collection, addDoc, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
-const TwoFA = () => {
+const TwoFA: React.FC = () => {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [fireStoredata, setFireStoredata] =  useState<string>("");
@@ -98,7 +97,7 @@ const TwoFA = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const value = e.target.value;
     if (isNaN(Number(value))) return;
     const newOtp = [...otp];
@@ -111,7 +110,7 @@ const TwoFA = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === "Backspace" && otp[index] === "" && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -159,7 +158,9 @@ const TwoFA = () => {
               value={otp[index]}
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              ref={(el) => (inputRefs.current[index] = el)}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
               className="w-12 h-12 mx-1 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           ))}
